@@ -16,7 +16,7 @@
     "prepare": "husky install"
   },
   "keywords": [],
-  "author": "Celia Avilés",
+  "author": "Víctor de Lara",
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
