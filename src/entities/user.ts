@@ -1,12 +1,10 @@
-type Id = {
-  id: string;
-};
 export type Login = {
   userName: string;
   password: string;
 };
 
-export type UserNoId = Login & {
+export type User = Login & {
+  id: string;
   email: string;
   firstName: string;
   surname: string;
@@ -14,4 +12,3 @@ export type UserNoId = Login & {
   peopleWhoHate: User[];
   peopleWhoLike: User[];
 };
-export type User = UserNoId & Id;
