@@ -39,8 +39,41 @@ export class UserMongoController {
       next(error);
     }
   }
-  // GetAll();
-  // getById();
-  // update();
-  // delete();
+
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await this.repo.getAll();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = this.repo.getById(req.params.id);
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await this.repo.update(req.params.id, req.body);
+      res.status(201);
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      await this.repo.delete(req.params.id);
+      res.status(204);
+      res.json({});
+    } catch (error) {
+      next(error);
+    }
+  }
 }
