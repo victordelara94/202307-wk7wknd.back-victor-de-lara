@@ -1,7 +1,7 @@
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { HttpError } from '../types/http.error.type';
+import { HttpError } from '../types/http.error.type.js';
 const debug = createDebug('SN:Middleware:Error');
 
 debug('Loaded');
