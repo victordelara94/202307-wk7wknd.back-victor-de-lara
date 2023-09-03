@@ -29,7 +29,7 @@ export class UserMongoController {
     try {
       debug('presearch');
       const data = await this.repo.search({ key: 'userName', value: userName });
-      debug(data);
+
       if (!data.length) throw error;
       if (!(await Auth.compare(password, data[0].password))) {
         throw error;
@@ -39,7 +39,7 @@ export class UserMongoController {
         userName: data[0].userName,
         id: data[0].id,
       };
-      debug(payload);
+
       const token = await Auth.signJWT(payload);
       res.json({ user: data[0].userName, token });
     } catch (error) {

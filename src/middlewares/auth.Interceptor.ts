@@ -23,11 +23,11 @@ export class AuthInterceptor {
 
   async authentication(req: Request, _res: Response, next: NextFunction) {
     const userID = req.body.validatedId;
-    debug(userID);
+
     try {
       const repo = new UserMongoRepository();
       const user = await repo.getById(userID);
-      debug(user.id + ' ', userID);
+
       if (user.id !== userID) {
         const error = new HttpError(403, 'Forbidden', 'Not same user');
         next(error);

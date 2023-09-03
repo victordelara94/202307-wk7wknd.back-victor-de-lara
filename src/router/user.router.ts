@@ -31,6 +31,14 @@ userRouter.patch(
   userInterceptor.authentication.bind(userInterceptor),
   userController.update.bind(userController)
 );
+
+userRouter.delete(
+  '/profile',
+  userInterceptor.authorizate.bind(userInterceptor),
+  userInterceptor.authentication.bind(userInterceptor),
+  userController.delete.bind(userController)
+);
+
 userRouter.patch(
   '/friends',
   userInterceptor.authorizate.bind(userInterceptor),
@@ -42,11 +50,4 @@ userRouter.patch(
   userInterceptor.authorizate.bind(userInterceptor),
   userInterceptor.authentication.bind(userInterceptor),
   userController.addPeopleWhoHate.bind(userController)
-);
-
-userRouter.delete(
-  '/profile',
-  userInterceptor.authorizate.bind(userInterceptor),
-  userInterceptor.authentication.bind(userInterceptor),
-  userController.delete.bind(userController)
 );
