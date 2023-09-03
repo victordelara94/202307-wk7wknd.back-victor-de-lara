@@ -44,8 +44,8 @@ userSchema.set('toJSON', {
     returnedObject.id = returnedObject._id;
     delete returnedObject._id;
     delete returnedObject.__v;
-    delete returnedObject.passwd;
+    delete returnedObject.password;
   },
 });
 
-export const UserModel = model('User', userSchema, 'users');
+export const UserModel = model('User', userSchema, 'users2');
