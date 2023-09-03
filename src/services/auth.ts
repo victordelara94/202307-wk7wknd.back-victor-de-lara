@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt';
+import createDebug from 'debug';
 import jwt from 'jsonwebtoken';
 import { HttpError } from '../types/http.error.type.js';
 import { TokenPayload } from '../types/token.type.js';
-
+const debug = createDebug('SN:auth');
 export class Auth {
-  private static secret = process.env.TOKEN_SECRET!;
+  private static secret = 'secret';
 
   static hash(passwd: string): Promise<string> {
     const saltRounds = 10;
@@ -16,6 +17,7 @@ export class Auth {
   }
 
   static signJWT(payload: TokenPayload): string {
+    debug('sign');
     const token = jwt.sign(payload, Auth.secret);
     return token;
   }

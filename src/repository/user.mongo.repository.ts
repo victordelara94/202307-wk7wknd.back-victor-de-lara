@@ -1,8 +1,8 @@
 import createDebug from 'debug';
-import { User } from '../entities/user';
-import { HttpError } from '../types/http.error.type';
-import { Repository } from './repository';
-import { UserModel } from './user.mongo.model';
+import { User } from '../entities/user.js';
+import { HttpError } from '../types/http.error.type.js';
+import { Repository } from './repository.js';
+import { UserModel } from './user.mongo.model.js';
 const debug = createDebug('SN:Repo:UserMongoRepo');
 
 export class UserMongoRepository implements Repository<User> {
@@ -12,19 +12,17 @@ export class UserMongoRepository implements Repository<User> {
 
   async getAll(): Promise<User[]> {
     const data = await UserModel.find()
-      .populate('peopleWhoHate', { userName: 1 }, 'peopleWhoLike', {
-        userName: 1,
-      })
+      // .populate('peopleWhoHate', [{ userName: 1 }], 'peopleWhoLike', [
+      //   {
+      //     userName: 1,
+      //   },
+      // ])
       .exec();
     return data;
   }
 
   async getById(id: string): Promise<User> {
-    const data = await UserModel.findById(id)
-      .populate('peopleWhoHate', { userName: 1 }, 'peopleWhoLike', {
-        userName: 1,
-      })
-      .exec();
+    const data = await UserModel.findById(id).exec();
     if (!data)
       throw new HttpError(404, 'Not Found', 'User not found', {
         cause: 'Trying getById',
@@ -45,11 +43,8 @@ export class UserMongoRepository implements Repository<User> {
     key: string;
     value: unknown;
   }): Promise<User[]> {
-    const data = UserModel.find({ [key]: value })
-      .populate('peopleWhoHate', { userName: 1 }, 'peopleWhoLike', {
-        userName: 1,
-      })
-      .exec();
+    debug('search' + key + ' ' + value);
+    const data = await UserModel.find({ [key]: value }).exec();
     if (!data)
       throw new HttpError(404, 'Not Found', 'User not found', {
         cause: 'Trying getById',
@@ -58,11 +53,9 @@ export class UserMongoRepository implements Repository<User> {
   }
 
   async update(id: string, newData: Partial<User>): Promise<User> {
-    const data = await UserModel.findByIdAndUpdate(id, newData)
-      .populate('peopleWhoHate', { userName: 1 }, 'peopleWhoLike', {
-        userName: 1,
-      })
-      .exec();
+    const data = await UserModel.findByIdAndUpdate(id, newData, {
+      new: true,
+    }).exec();
     if (!data)
       throw new HttpError(404, 'Not Found', 'User not found', {
         cause: 'Trying getById',
