@@ -149,11 +149,7 @@ describe('Givent the instantiate USerMongoController', () => {
         status: Number,
       } as unknown as Response;
 
-      await mockUserMongoController.addPeopleWhoLike(
-        mockReq,
-        mockResponse,
-        mockNext
-      );
+      await mockUserMongoController.addFriends(mockReq, mockResponse, mockNext);
       expect(mockRepo.getById).toHaveBeenCalled();
       expect(mockRepo.update).toHaveBeenCalled();
       expect(mockResponse.json).toHaveBeenCalled();
@@ -175,11 +171,7 @@ describe('Givent the instantiate USerMongoController', () => {
         status: Number,
       } as unknown as Response;
 
-      await mockUserMongoController.addPeopleWhoLike(
-        mockReq,
-        mockResponse,
-        mockNext
-      );
+      await mockUserMongoController.addFriends(mockReq, mockResponse, mockNext);
       expect(mockRepo.getById).toHaveBeenCalled();
       expect(mockRepo.update).toHaveBeenCalled();
       expect(mockResponse.json).toHaveBeenCalled();
@@ -201,11 +193,7 @@ describe('Givent the instantiate USerMongoController', () => {
         status: Number,
       } as unknown as Response;
 
-      await mockUserMongoController.addPeopleWhoHate(
-        mockReq,
-        mockResponse,
-        mockNext
-      );
+      await mockUserMongoController.addEnemies(mockReq, mockResponse, mockNext);
       expect(mockRepo.getById).toHaveBeenCalled();
       expect(mockRepo.update).toHaveBeenCalled();
       expect(mockResponse.json).toHaveBeenCalled();
@@ -227,11 +215,7 @@ describe('Givent the instantiate USerMongoController', () => {
         status: Number,
       } as unknown as Response;
 
-      await mockUserMongoController.addPeopleWhoHate(
-        mockReq,
-        mockResponse,
-        mockNext
-      );
+      await mockUserMongoController.addEnemies(mockReq, mockResponse, mockNext);
       expect(mockRepo.getById).toHaveBeenCalled();
       expect(mockRepo.update).toHaveBeenCalled();
       expect(mockResponse.json).toHaveBeenCalled();
@@ -326,11 +310,7 @@ describe('Givent the instantiate USerMongoController', () => {
       } as unknown as Request;
       const mockResponse = {} as unknown as Response;
 
-      await mockUserMongoController.addPeopleWhoLike(
-        mockReq,
-        mockResponse,
-        mockNext
-      );
+      await mockUserMongoController.addFriends(mockReq, mockResponse, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(new Error('GetById Error'));
     });
@@ -340,11 +320,7 @@ describe('Givent the instantiate USerMongoController', () => {
       } as unknown as Request;
       const mockResponse = {} as unknown as Response;
 
-      await mockUserMongoController.addPeopleWhoHate(
-        mockReq,
-        mockResponse,
-        mockNext
-      );
+      await mockUserMongoController.addEnemies(mockReq, mockResponse, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(new Error('GetById Error'));
     });

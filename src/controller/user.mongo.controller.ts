@@ -80,20 +80,21 @@ export class UserMongoController {
     }
   }
 
-  async addPeopleWhoLike(req: Request, res: Response, next: NextFunction) {
+  async addFriends(req: Request, res: Response, next: NextFunction) {
     try {
       const friend = await this.repo.getById(req.body.id);
 
       const user = await this.repo.getById(req.body.validatedId);
 
-      const actualFriend = user.peopleWhoLike.find(
+      const actualFriend = user.friends.find(
         (item) => (item.id as unknown as Buffer).toString('hex') === friend.id
       );
-      if (!actualFriend) {
-        user.peopleWhoLike.push(friend);
+      if (actualFriend) {
+        throw new Error('Friend already on the list');
       }
 
-      user.peopleWhoHate = user.peopleWhoHate.filter(
+      user.friends.push(friend);
+      user.enemies = user.enemies.filter(
         (item) => (item.id as unknown as Buffer).toString('hex') !== friend.id
       );
       this.repo.update(req.body.validatedId, user);
@@ -104,20 +105,21 @@ export class UserMongoController {
     }
   }
 
-  async addPeopleWhoHate(req: Request, res: Response, next: NextFunction) {
+  async addEnemies(req: Request, res: Response, next: NextFunction) {
     try {
       const enemy = await this.repo.getById(req.body.id);
 
       const user = await this.repo.getById(req.body.validatedId);
 
-      const actualEnemy = user.peopleWhoHate.find(
+      const actualEnemy = user.enemies.find(
         (item) => (item.id as unknown as Buffer).toString('hex') === enemy.id
       );
-      if (!actualEnemy) {
-        user.peopleWhoHate.push(enemy);
+      if (actualEnemy) {
+        throw new Error('Friend already on the list');
       }
 
-      user.peopleWhoLike = user.peopleWhoLike.filter(
+      user.enemies.push(enemy);
+      user.friends = user.friends.filter(
         (item) => (item.id as unknown as Buffer).toString('hex') !== enemy.id
       );
       this.repo.update(req.body.validatedId, user);

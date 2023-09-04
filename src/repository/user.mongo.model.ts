@@ -25,13 +25,13 @@ const userSchema = new Schema<User>({
     require: true,
   },
   age: { type: Number },
-  peopleWhoHate: [
+  enemies: [
     {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
   ],
-  peopleWhoLike: [
+  friends: [
     {
       type: Schema.Types.ObjectId,
       ref: 'User',
