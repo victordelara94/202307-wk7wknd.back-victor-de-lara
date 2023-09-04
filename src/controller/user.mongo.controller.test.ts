@@ -132,12 +132,11 @@ describe('Givent the instantiate USerMongoController', () => {
       expect(mockRepo.update).toHaveBeenCalled();
       expect(mockResponse.json).toHaveBeenCalled();
     });
-    test('Then if we use addPeopleWhoLike method with a User who are actually a friend', async () => {
-      Auth.hash = await jest.fn().mockReturnValue('hash');
+    test('Then if we use addFriends method with a User who are actually a friend', async () => {
       const friend = { id: 'test' };
       const User = {
-        peopleWhoLike: [{ id: 'test' }],
-        peopleWhoHate: [{ id: 'test2' }],
+        friends: [{ id: 'test' }],
+        enemies: [{ id: 'test2' }],
       };
       (mockRepo.getById as jest.Mock).mockResolvedValueOnce(friend);
       (mockRepo.getById as jest.Mock).mockResolvedValueOnce(User);
@@ -146,20 +145,17 @@ describe('Givent the instantiate USerMongoController', () => {
       } as unknown as Request;
       const mockResponse = {
         json: jest.fn(),
-        status: Number,
       } as unknown as Response;
 
       await mockUserMongoController.addFriends(mockReq, mockResponse, mockNext);
       expect(mockRepo.getById).toHaveBeenCalled();
-      expect(mockRepo.update).toHaveBeenCalled();
-      expect(mockResponse.json).toHaveBeenCalled();
     });
-    test('Then if we use addPeopleWhoLike method with a User who are not actually a friend', async () => {
-      Auth.hash = await jest.fn().mockReturnValue('hash');
+    test('Then if we use addFriends method with a User who are not actually a friend', async () => {
       const friend = { id: 'test1' };
       const User = {
-        peopleWhoLike: [{ id: 'test' }],
-        peopleWhoHate: [{ id: 'test2' }],
+        id: { id: 'test' },
+        friends: [{ id: 'test' }],
+        enemies: [{ id: 'test2' }],
       };
       (mockRepo.getById as jest.Mock).mockResolvedValueOnce(friend);
       (mockRepo.getById as jest.Mock).mockResolvedValueOnce(User);
@@ -168,7 +164,6 @@ describe('Givent the instantiate USerMongoController', () => {
       } as unknown as Request;
       const mockResponse = {
         json: jest.fn(),
-        status: Number,
       } as unknown as Response;
 
       await mockUserMongoController.addFriends(mockReq, mockResponse, mockNext);
@@ -176,17 +171,17 @@ describe('Givent the instantiate USerMongoController', () => {
       expect(mockRepo.update).toHaveBeenCalled();
       expect(mockResponse.json).toHaveBeenCalled();
     });
-    test('Then if we use addPeopleWhoHate method with a User who are actually a enemy', async () => {
-      Auth.hash = await jest.fn().mockReturnValue('hash');
+    test('Then if we use addEnemies method with a User who are actually a enemy', async () => {
       const enemy = { id: 'test' };
       const User = {
-        peopleWhoHate: [{ id: 'test' }],
-        peopleWhoLike: [{ id: 'test2' }],
+        id: 'test3',
+        enemies: [{ id: 'test' }],
+        friends: [{ id: 'test2' }],
       };
       (mockRepo.getById as jest.Mock).mockResolvedValueOnce(enemy);
       (mockRepo.getById as jest.Mock).mockResolvedValueOnce(User);
       const mockReq = {
-        body: { id: 'test', validatedId: 'test' },
+        body: { id: 'test', validatedId: 'test3' },
       } as unknown as Request;
       const mockResponse = {
         json: jest.fn(),
@@ -195,15 +190,13 @@ describe('Givent the instantiate USerMongoController', () => {
 
       await mockUserMongoController.addEnemies(mockReq, mockResponse, mockNext);
       expect(mockRepo.getById).toHaveBeenCalled();
-      expect(mockRepo.update).toHaveBeenCalled();
-      expect(mockResponse.json).toHaveBeenCalled();
     });
-    test('Then if we use addPeopleWhoHate method with a User who are not actually a friend', async () => {
+    test('Then if we use addEnemies method with a User who are not actually a friend', async () => {
       Auth.hash = await jest.fn().mockReturnValue('hash');
       const enemy = { id: 'test1' };
       const User = {
-        peopleWhoLike: [{ id: 'test' }],
-        peopleWhoHate: [{ id: 'test2' }],
+        friends: [{ id: 'test' }],
+        enemies: [{ id: 'test2' }],
       };
       (mockRepo.getById as jest.Mock).mockResolvedValueOnce(enemy);
       (mockRepo.getById as jest.Mock).mockResolvedValueOnce(User);
@@ -304,7 +297,7 @@ describe('Givent the instantiate USerMongoController', () => {
 
       expect(mockNext).toHaveBeenCalledWith(new Error('Update Error'));
     });
-    test('Then if we use addPeopleWhoLike method,next should called with error', async () => {
+    test('Then if we use addFriends method,next should called with error', async () => {
       const mockReq = {
         body: { id: 'test' },
       } as unknown as Request;
@@ -314,7 +307,7 @@ describe('Givent the instantiate USerMongoController', () => {
 
       expect(mockNext).toHaveBeenCalledWith(new Error('GetById Error'));
     });
-    test('Then if we use addPeopleWhoHate method,next should called with error', async () => {
+    test('Then if we use addenemies method,next should called with error', async () => {
       const mockReq = {
         body: { id: 'test' },
       } as unknown as Request;

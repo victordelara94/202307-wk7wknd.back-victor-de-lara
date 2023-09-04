@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { error } from 'console';
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import { User } from '../entities/user.js';
@@ -90,7 +91,7 @@ export class UserMongoController {
         (item) => (item.id as unknown as Buffer).toString('hex') === friend.id
       );
       if (actualFriend) {
-        throw new Error('Friend already on the list');
+        throw error;
       }
 
       user.friends.push(friend);

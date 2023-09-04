@@ -12,7 +12,7 @@ export class UserMongoRepository implements Repository<User> {
 
   async getAll(): Promise<User[]> {
     const data = await UserModel.find()
-      // .populate('peopleWhoHate', [{ userName: 1 }], 'peopleWhoLike', [
+      // .populate('enemies', [{ userName: 1 }], 'friends', [
       //   {
       //     userName: 1,
       //   },
@@ -43,7 +43,6 @@ export class UserMongoRepository implements Repository<User> {
     key: string;
     value: unknown;
   }): Promise<User[]> {
-    debug('search' + key + ' ' + value);
     const data = await UserModel.find({ [key]: value }).exec();
     if (!data)
       throw new HttpError(404, 'Not Found', 'User not found', {
