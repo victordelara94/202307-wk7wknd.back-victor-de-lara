@@ -1,7 +1,7 @@
 import createDebug from 'debug';
 import { Router as createRouter } from 'express';
 import { UserMongoController } from '../controller/user.mongo.controller.js';
-import { AuthInterceptor } from '../middlewares/auth.Interceptor.js';
+import { AuthInterceptor } from '../middlewares/auth.interceptor.js';
 import { UserMongoRepository } from '../repository/user.mongo.repository.js';
 
 const debug = createDebug('SN:Router:UsersRouter');
@@ -49,5 +49,5 @@ userRouter.patch(
   '/enemies',
   userInterceptor.authorizate.bind(userInterceptor),
   userInterceptor.authentication.bind(userInterceptor),
-  userController.addEnemys.bind(userController)
+  userController.addEnemies.bind(userController)
 );
