@@ -43,11 +43,11 @@ userRouter.patch(
   '/friends',
   userInterceptor.authorizate.bind(userInterceptor),
   userInterceptor.authentication.bind(userInterceptor),
-  userController.addPeopleWhoLike.bind(userController)
+  userController.addFriends.bind(userController)
 );
 userRouter.patch(
   '/enemies',
   userInterceptor.authorizate.bind(userInterceptor),
   userInterceptor.authentication.bind(userInterceptor),
-  userController.addPeopleWhoHate.bind(userController)
+  userController.addEnemys.bind(userController)
 );
