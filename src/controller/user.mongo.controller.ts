@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { error } from 'console';
+
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import { User } from '../entities/user.js';
@@ -16,6 +16,8 @@ export class UserMongoController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       req.body.password = await Auth.hash(req.body.password);
+      // Const finalPatch = req.file!.destination + '/' + req.file!.filename;
+      // const imageData = await this.cloudinary.uploadImage(finalPatch);
       const data = await this.repo.create(req.body);
       res.status(201);
       res.json(data);
@@ -42,7 +44,7 @@ export class UserMongoController {
       };
 
       const token = await Auth.signJWT(payload);
-      res.json({ user: data[0].userName, token });
+      res.json({ user: data[0], token });
     } catch (error) {
       next(error);
     }
@@ -83,21 +85,21 @@ export class UserMongoController {
 
   async addFriends(req: Request, res: Response, next: NextFunction) {
     try {
+      if (req.body.id === req.body.validatedId) {
+        throw new HttpError(406, 'Not aceptable', 'You cant add yourself');
+      }
+
       const friend = await this.repo.getById(req.body.id);
 
       const user = await this.repo.getById(req.body.validatedId);
 
-      const actualFriend = user.friends.find(
-        (item) => (item.id as unknown as Buffer).toString('hex') === friend.id
-      );
+      const actualFriend = user.friends.find((item) => item.id === req.body.id);
       if (actualFriend) {
-        throw error;
+        throw new HttpError(406, 'Not aceptable', 'Already in your friendlist');
       }
 
       user.friends.push(friend);
-      user.enemies = user.enemies.filter(
-        (item) => (item.id as unknown as Buffer).toString('hex') !== friend.id
-      );
+      user.enemies = user.enemies.filter((item) => item.id !== friend.id);
       this.repo.update(req.body.validatedId, user);
 
       res.json(friend);
@@ -106,8 +108,24 @@ export class UserMongoController {
     }
   }
 
+  async deleteFriendOrEnemy(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = await this.repo.getById(req.body.validatedId);
+      user.friends = user.friends.filter((item) => item.id !== req.body.id);
+      user.enemies = user.enemies.filter((item) => item.id !== req.body.id);
+      this.repo.update(req.body.validatedId, user);
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async addEnemies(req: Request, res: Response, next: NextFunction) {
     try {
+      if (req.body.id === req.body.validatedId) {
+        throw new HttpError(406, 'Not aceptable', 'You cant add yourself');
+      }
+
       const enemy = await this.repo.getById(req.body.id);
 
       const user = await this.repo.getById(req.body.validatedId);
@@ -116,7 +134,7 @@ export class UserMongoController {
         (item) => (item.id as unknown as Buffer).toString('hex') === enemy.id
       );
       if (actualEnemy) {
-        throw new Error('Friend already on the list');
+        throw new HttpError(406, 'Not aceptable', 'Already in your enemylist');
       }
 
       user.enemies.push(enemy);

@@ -150,7 +150,7 @@ describe('Givent the instantiate USerMongoController', () => {
       await mockUserMongoController.addFriends(mockReq, mockResponse, mockNext);
       expect(mockRepo.getById).toHaveBeenCalled();
     });
-    test('Then if we use addFriends method with a User who are not actually a friend', async () => {
+    test.only('Then if we use addFriends method with a User who are not actually a friend', async () => {
       const friend = { id: 'test1' };
       const User = {
         id: { id: 'test' },

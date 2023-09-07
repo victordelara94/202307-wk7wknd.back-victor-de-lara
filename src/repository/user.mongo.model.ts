@@ -37,6 +37,9 @@ const userSchema = new Schema<User>({
       ref: 'User',
     },
   ],
+  avatar: {
+    type: {},
+  },
 });
 
 userSchema.set('toJSON', {
@@ -48,4 +51,4 @@ userSchema.set('toJSON', {
   },
 });
 
-export const UserModel = model('User', userSchema, 'users2');
+export const UserModel = model('User', userSchema, 'users');

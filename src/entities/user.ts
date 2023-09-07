@@ -11,4 +11,5 @@ export type User = Login & {
   age: number;
   enemies: User[];
   friends: User[];
+  avatar?: String;
 };
