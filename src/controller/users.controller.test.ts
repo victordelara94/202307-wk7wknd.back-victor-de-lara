@@ -6,22 +6,25 @@ import { UsersController } from './users.controller.js';
 describe('Givent the instantiate USerMongoController', () => {
   describe('When all is ok', () => {
     const mockNext = jest.fn() as NextFunction;
+    let mockRepo: Repository<User>;
+    let mockUserMongoController: UsersController;
+    beforeEach(() => {
+      mockRepo = {
+        create: jest.fn(),
+        getAll: jest.fn(),
+        getById: jest.fn(),
+        search: jest.fn().mockResolvedValue([
+          {
+            userName: '',
+            id: '',
+          },
+        ]),
+        update: jest.fn(),
+        delete: jest.fn(),
+      };
+      mockUserMongoController = new UsersController(mockRepo);
+    });
 
-    const mockRepo: Repository<User> = {
-      create: jest.fn(),
-      getAll: jest.fn(),
-      getById: jest.fn(),
-      search: jest.fn().mockResolvedValue([
-        {
-          userName: '',
-          id: '',
-        },
-      ]),
-      update: jest.fn(),
-      delete: jest.fn(),
-    };
-
-    const mockUserMongoController = new UsersController(mockRepo);
     test('Then if we use register method', async () => {
       const mockData = { id: 'test', userName: 'test' };
 
@@ -43,8 +46,8 @@ describe('Givent the instantiate USerMongoController', () => {
       expect(mockResponse.json).toHaveBeenCalledWith(mockData);
     });
     test('Then if we use login method', async () => {
-      Auth.compare = await jest.fn().mockReturnValue(true);
-      Auth.signJWT = await jest.fn().mockResolvedValue('testToken');
+      Auth.compare = await jest.fn().mockResolvedValueOnce(true);
+      Auth.signJWT = await jest.fn().mockResolvedValueOnce('testToken');
 
       const mockReq = {
         body: {
@@ -75,7 +78,7 @@ describe('Givent the instantiate USerMongoController', () => {
       await mockUserMongoController.login(mockReq, mockResponse, mockNext);
     });
     test('Then if we use login method, with not the correct password', async () => {
-      Auth.compare = jest.fn().mockResolvedValue(false);
+      Auth.compare = jest.fn().mockResolvedValueOnce(false);
 
       const mockReq = {
         body: {
@@ -225,6 +228,30 @@ describe('Givent the instantiate USerMongoController', () => {
       expect(await mockRepo.delete).toHaveBeenCalled();
       expect(mockResponse.json).toHaveBeenCalledWith({});
     });
+
+    test('Then if we use deleteFriendOrEnemy method', async () => {
+      const mockReq = {
+        body: { validatedId: 'test1', id: 'test2' },
+      } as Request;
+
+      const user = {
+        friends: [{ id: 'test' }, { id: 'test1' }],
+        enemies: [{ id: 'test' }, { id: 'test1' }],
+      };
+      (mockRepo.getById as jest.Mock).mockResolvedValueOnce(user);
+      const mockResponse = {
+        json: jest.fn(),
+        status: Number,
+      } as unknown as Response;
+
+      await mockUserMongoController.deleteFriendOrEnemy(
+        mockReq,
+        mockResponse,
+        mockNext
+      );
+      expect(await mockRepo.getById).toHaveBeenCalled();
+      expect(mockResponse.json).toHaveBeenCalled();
+    });
   });
   describe('When are errors', () => {
     const mockNext = jest.fn() as NextFunction;
@@ -254,7 +281,7 @@ describe('Givent the instantiate USerMongoController', () => {
     });
 
     test('Then if we use login method,next should called with error', async () => {
-      Auth.compare = await jest.fn().mockReturnValue(true);
+      Auth.compare = await jest.fn().mockResolvedValueOnce(true);
       Auth.signJWT = await jest.fn().mockResolvedValue('testToken');
 
       const mockReq = {
@@ -321,6 +348,12 @@ describe('Givent the instantiate USerMongoController', () => {
 
       await mockUserMongoController.delete(mockReq, mockResponse, mockNext);
       expect(mockNext).toHaveBeenCalledWith(new Error('Delete Error'));
+    });
+    test('Then if we use addFriends method with your own user,next should called with error', async () => {
+      const mockReq = { body: { id: 'test', validatedId: 'test' } } as Request;
+      const mockResponse = {} as unknown as Response;
+
+      await mockUserMongoController.addFriends(mockReq, mockResponse, mockNext);
     });
   });
 });

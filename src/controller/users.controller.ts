@@ -128,7 +128,7 @@ export class UsersController {
         (item) => (item.id as unknown as Buffer).toString('hex') !== enemy.id
       );
       this.repo.update(req.body.validatedId, user);
-      console.log('enemy', enemy);
+
       res.json(enemy);
     } catch (error) {
       next(error);
@@ -138,6 +138,7 @@ export class UsersController {
   async deleteFriendOrEnemy(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.repo.getById(req.body.validatedId);
+
       user.friends = user.friends.filter((item) => item.id !== req.body.id);
       user.enemies = user.enemies.filter((item) => item.id !== req.body.id);
       this.repo.update(req.body.validatedId, user);
