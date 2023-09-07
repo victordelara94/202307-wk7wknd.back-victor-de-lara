@@ -12,6 +12,7 @@
     "build": "tsc --watch",
     "start": "concurrently \"npm:server\" \"npm:build\"",
     "test": "jest --watchAll --coverage",
+    "test:fast": "jest --watchAll",
     "test:prod": "jest --watchAll --coverage --watchAll=false --passWithNoTests",
     "prepare": "husky install"
   },

@@ -1,6 +1,6 @@
 import createDebug from 'debug';
 import { Router as createRouter } from 'express';
-import { UserMongoController } from '../controller/user.mongo.controller.js';
+import { UsersController } from '../controller/users.controller.js';
 import { AuthInterceptor } from '../middlewares/auth.interceptor.js';
 import { UserMongoRepository } from '../repository/user.mongo.repository.js';
 
@@ -9,7 +9,7 @@ const userInterceptor = new AuthInterceptor();
 export const userRouter = createRouter();
 const repo = new UserMongoRepository();
 debug('Loaded');
-const userController = new UserMongoController(repo);
+const userController = new UsersController(repo);
 // Export class UsersRouter {
 //   constructor(private controller:UserMongoController) {
 //     debug('instantiate');

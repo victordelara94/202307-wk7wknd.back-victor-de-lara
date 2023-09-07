@@ -8,7 +8,7 @@ import { Auth } from '../services/auth.js';
 import { HttpError } from '../types/http.error.type.js';
 import { TokenPayload } from '../types/token.type.js';
 const debug = createDebug('SN:Controller:UserController');
-export class UserMongoController {
+export class UsersController {
   constructor(private repo: Repository<User>) {
     debug('instantiate');
   }
@@ -90,9 +90,7 @@ export class UserMongoController {
       }
 
       const friend = await this.repo.getById(req.body.id);
-
       const user = await this.repo.getById(req.body.validatedId);
-
       const actualFriend = user.friends.find((item) => item.id === req.body.id);
       if (actualFriend) {
         throw new HttpError(406, 'Not aceptable', 'Already in your friendlist');
@@ -103,18 +101,6 @@ export class UserMongoController {
       this.repo.update(req.body.validatedId, user);
 
       res.json(friend);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async deleteFriendOrEnemy(req: Request, res: Response, next: NextFunction) {
-    try {
-      const user = await this.repo.getById(req.body.validatedId);
-      user.friends = user.friends.filter((item) => item.id !== req.body.id);
-      user.enemies = user.enemies.filter((item) => item.id !== req.body.id);
-      this.repo.update(req.body.validatedId, user);
-      res.json(user);
     } catch (error) {
       next(error);
     }
@@ -142,8 +128,20 @@ export class UserMongoController {
         (item) => (item.id as unknown as Buffer).toString('hex') !== enemy.id
       );
       this.repo.update(req.body.validatedId, user);
-
+      console.log('enemy', enemy);
       res.json(enemy);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteFriendOrEnemy(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = await this.repo.getById(req.body.validatedId);
+      user.friends = user.friends.filter((item) => item.id !== req.body.id);
+      user.enemies = user.enemies.filter((item) => item.id !== req.body.id);
+      this.repo.update(req.body.validatedId, user);
+      res.json(user);
     } catch (error) {
       next(error);
     }

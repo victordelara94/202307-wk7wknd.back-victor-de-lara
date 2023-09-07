@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserMongoRepository } from '../repository/user.mongo.repository';
+import { UserMongoRepository } from '../repository/user.mongo.repository.js';
 import { Auth } from '../services/auth';
 import { AuthInterceptor } from './auth.interceptor';
 
