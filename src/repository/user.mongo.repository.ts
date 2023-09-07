@@ -1,4 +1,5 @@
 import createDebug from 'debug';
+import 'dotenv/config';
 import { User } from '../entities/user.js';
 import { HttpError } from '../types/http.error.type.js';
 import { Repository } from './repository.js';
@@ -12,17 +13,17 @@ export class UserMongoRepository implements Repository<User> {
 
   async getAll(): Promise<User[]> {
     const data = await UserModel.find()
-      // .populate('enemies', [{ userName: 1 }], 'friends', [
-      //   {
-      //     userName: 1,
-      //   },
-      // ])
+      .populate('friends', { userName: 1 })
+      .populate('enemies', { userName: 1 })
       .exec();
     return data;
   }
 
   async getById(id: string): Promise<User> {
-    const data = await UserModel.findById(id).exec();
+    const data = await UserModel.findById(id)
+      .populate('friends', { userName: 1 })
+      .populate('enemies', { userName: 1 })
+      .exec();
     if (!data)
       throw new HttpError(404, 'Not Found', 'User not found', {
         cause: 'Trying getById',

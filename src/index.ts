@@ -1,9 +1,10 @@
 import createDebug from 'debug';
 import { createServer } from 'http';
 import { app } from './app.js';
+
 import { dbConnect } from './db/db.js';
 
-const debug = createDebug('SN');
+const debug = createDebug('SN:index');
 const PORT = process.env.PORT || 3000;
 
 const server = createServer(app);

@@ -10,6 +10,11 @@ export const userRouter = createRouter();
 const repo = new UserMongoRepository();
 debug('Loaded');
 const userController = new UserMongoController(repo);
+// Export class UsersRouter {
+//   constructor(private controller:UserMongoController) {
+//     debug('instantiate');
+//   }
+// }
 userRouter.get(
   '/',
   userInterceptor.authorizate.bind(userInterceptor),
@@ -50,4 +55,10 @@ userRouter.patch(
   userInterceptor.authorizate.bind(userInterceptor),
   userInterceptor.authentication.bind(userInterceptor),
   userController.addEnemies.bind(userController)
+);
+userRouter.patch(
+  '/contact-delete',
+  userInterceptor.authorizate.bind(userInterceptor),
+  userInterceptor.authentication.bind(userInterceptor),
+  userController.deleteFriendOrEnemy.bind(userController)
 );
